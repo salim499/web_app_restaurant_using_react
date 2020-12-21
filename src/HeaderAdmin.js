@@ -1,13 +1,3 @@
-/*
-    useEffect(()=>{
-      firebase.firestore().collection('times').add(
-          {
-              nom:"salim",
-              prenom:"salim"
-          }
-      )
-    },[])
-*/
 import firebase from './FireStore'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState} from 'react';
@@ -51,6 +41,7 @@ function App(props) {
     <Nav className="mr-auto">
       <Nav.Link href="#home" name="utilisateurs" onClick={changeAffichage}>Utilisateurs</Nav.Link>
       <Nav.Link href="#link" name="recettes" onClick={changeAffichage}>Recettes</Nav.Link>
+      <Nav.Link href="#link" name="emails" onClick={changeAffichage}>Emails</Nav.Link>
       <Nav.Link href="#link"  onClick={ouvrirModalAjoutRecette}>Ajouter Recette</Nav.Link>
       <Nav.Link href="#link"  onClick={ouvrirModalAjoutCategorie}>Ajouter Categorie</Nav.Link>
       <Nav.Link href="#link"  onClick={deconnexionBDD}>Quitter Admin</Nav.Link>

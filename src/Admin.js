@@ -2,7 +2,8 @@ import React from 'react'
 import HeaderAdmin from './HeaderAdmin'
 import Utilisateur from './Component/Utilisateurs'
 import Recettes from './Component/Recettes'
-import {useState, useEffect} from 'react'
+import Emails from './Component/email'
+import {useState} from 'react'
 function App() {
 
   function changeAffichage(e){
@@ -10,27 +11,16 @@ function App() {
   }
 
   const [affichage, setAffichage]=useState("utilisateurs")
- /* useEffect(()=>{
-    firebase.auth().onAuthStateChanged(user=>{
-      if (user===null){
-        console.log(user)
-      } else {
-        if(user.uid==="ioq5hhMHsZcbDYgkDusoyZ1ihf62"){
-          setAdmin("admin")
-        }else{
-          setAdmin("client")
-        }
-      }
-    })
-  },[])*/
+ 
   return (
     <div>
 <HeaderAdmin changeAffichage={changeAffichage}></HeaderAdmin>
 {
   affichage==="utilisateurs"?
   <Utilisateur></Utilisateur>
-  :
+  :affichage==="recettes"?
 <Recettes></Recettes>
+:<Emails></Emails>
 }
 </div>
   

@@ -77,11 +77,17 @@ function App(props) {
     props.filterChef(e.target.name)
   }
   /////////////////////////////////////////
+  function navigationFunction(e){
+    props.navigationFunction(e.target.name)
+  }
+  function navigationFunctionVoice(e){
+    props.navigationFunction(e)   
+  }
   ///////////////////////////////////////////////////////////////////////////////////
 
   const inscrire = "inscrire";
   const connection = "connecter";
-  const deconnection = "connecter";
+  const deconnection = "déconnecter";
   const moncompte = "compte";
 
   function readOutLoad(e) {
@@ -98,7 +104,7 @@ function App(props) {
 
   const recognition = new SpeechRegognition();
 
-  recognition.continuous = true;
+  recognition.continuous = false;
 
   recognition.onstart = function () {
     console.log("en ecoute");
@@ -113,8 +119,7 @@ function App(props) {
       ) {
         setShowIncription(true);
       } else if (
-        e.results[0][0]["transcript"].includes(connection) ||
-        connection.includes(e.results[0][0]["transcript"])
+        e.results[0][0]["transcript"].includes(connection)
       ) {
         setShowConnection(true);
       } else if (e.results[0][0]["transcript"].includes("connexion")) {
@@ -126,8 +131,7 @@ function App(props) {
       }
     } else {
       if (
-        e.results[0][0]["transcript"].includes(deconnection) ||
-        deconnection.includes(e.results[0][0]["transcript"])
+        e.results[0][0]["transcript"].includes(deconnection) 
       ) {
         firebase
           .auth()
@@ -161,6 +165,42 @@ function App(props) {
         let categorie=categories.find(e=>e.data.type.includes("sucré")).id
         console.log(categorie)
         props.filterCategorie(categorie)
+      }
+      else if(e.results[0][0]["transcript"].includes("pâte")){
+        let categorie=categories.find(e=>e.data.type.includes("pâtes")).id
+        console.log(categorie)
+        props.filterCategorie(categorie)
+      }
+      else if(e.results[0][0]["transcript"].includes("végétarienne" || "végan")){
+        let categorie=categories.find(e=>e.data.type.includes("végétarienne")).id
+        console.log(categorie)
+        props.filterCategorie(categorie)
+      }
+      else if(e.results[0][0]["transcript"].includes("Samira")){
+        let chef=chefs.find(e=>e.data.nom.includes("samira"))
+        console.log(chef)
+        props.filterChef(chef.data.nom)
+      }
+      else if(e.results[0][0]["transcript"].includes("Salim")){
+        let chef=chefs.find(e=>e.data.nom.includes("hassounasalim"))
+        console.log(chef)
+        props.filterChef(chef.data.nom)
+      }
+      else if(e.results[0][0]["transcript"].includes("tout")){
+        props.filterCategorie("tout")
+      }
+      else if(e.results[0][0]["transcript"].includes("contacter")){
+        navigationFunctionVoice("contact")
+      }
+      else if(e.results[0][0]["transcript"].includes("propos")){
+        navigationFunctionVoice("about")
+      }
+      else if(e.results[0][0]["transcript"].includes("accueil")){
+        navigationFunctionVoice("accueil")
+      }
+      else{
+        recognition.stop()
+        recognition.onend=function(){recognition.start()}
       }
     }
   };
@@ -283,8 +323,7 @@ function App(props) {
     </div>*/
     <div className="body2">
       <nav>
-        <div class="logo">
-          CodingNepal</div>
+        <div class="logo">Mes Recettes</div>
         <label for="btn" class="icon">
           <span class="fa fa-bars"></span>
         </label>
@@ -301,7 +340,15 @@ function App(props) {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <li><a href="#">Acceuil</a></li>
+              <li onClick={navigationFunction}>
+                <a href="#" name="plan">Plan du site</a>
+              </li>
+              <li onClick={navigationFunction}>
+                <a href="#" name="about">À propos de nous</a>
+              </li>
+              <li onClick={navigationFunction}>
+                <a href="#" name="contact">Contacter administrateur</a>
+              </li>
           <li>
             <label for="btn-1" class="show">Catégories +</label>
             <a href="#">Catégories</a>
