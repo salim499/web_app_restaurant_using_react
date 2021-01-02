@@ -309,7 +309,7 @@ handTrack.load().then(model => {
   <Carousel.Item interval={1800}>
     <img style={{width:"500px"}}
       className="d-block w-100"
-      src="/25618_w600.jpg"
+      src="../images/25618_w600.jpg"
       alt="Third slide"
     />
 
@@ -322,7 +322,7 @@ handTrack.load().then(model => {
   <Carousel.Item interval={1800}>
     <img style={{width:"500px"}}
       className="d-block w-100"
-      src="/50045_w600.jpg"
+      src="../images/50045_w600.jpg"
       alt="Third slide"
     />
 
@@ -335,7 +335,7 @@ handTrack.load().then(model => {
   <Carousel.Item interval={1800}>
     <img style={{width:"500px"}}
       className="d-block w-100"
-      src="/82832_w600.jpg"
+      src="../images/82832_w600.jpg"
       alt="Third slide"
     />
 
