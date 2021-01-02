@@ -35,6 +35,7 @@ handTrack.load().then(model => {
     }
   }
   function filterChef(e) {
+    console.log(e)
     let recettesChefs = recettesCopie.filter(
       (recette) => recette.recette.chef === e
     );
@@ -44,9 +45,43 @@ handTrack.load().then(model => {
   function navigationFunction(e) {
     setContent(e);
   }
+  function recommandationChef(e){
+    setShowDetail(false)
+    filterChef(e.target.dataset.chef)
+  }
+  function recommandationCategorie(e){
+    setShowDetail(false)
+    firebase.firestore().collection("Categories")
+    .get()
+    .then(querySnapshot=>{
+      //console.log(querySnapshot)
+        let tabCategories=[]
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            tabCategories.push(
+                {
+                  id:doc.id,
+                  data:doc.data()
+                }
+                )
+    })
+    let categorie=tabCategories.find(el=>el.data.type.includes(e.target.dataset.categorie)).id
+    console.log(categorie)
+    filterCategorie(categorie)
+    })
+  }
+  function recommandationF(e){
+    setShowDetail(false);
+    filterChef(e.target.dataset.categorie)
+    filterCategorie(e.target.dataset.chef)
+  }
+  function FermerContact(){
+    setContent("accueil")
+  }
   //////////////////////////////////////////
   const [recettesCopie, setRecettesCopie] = useState([]);
   const [recettes, setRecettes] = useState([]);
+  const [datas, setDatas] = useState([]);
   const [recetteDetail, setRecetteDetail] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [ingredients, setIngredients] = useState([]);
@@ -110,6 +145,31 @@ handTrack.load().then(model => {
   function fermerDetail(e) {
     setShowDetail(false);
   }
+
+  function enregistrerFonction(e){
+    let user=firebase.auth().currentUser.uid
+    console.log(user)  
+    firebase
+    .firestore()
+    .collection("MesRecettes")
+    .add({id:user, recette:e.target.name})  
+  }
+  function AfficherMesRecette(mesRecettes){
+    let a=[]
+    setRecettes([])
+    mesRecettes.forEach(e=>{
+    firebase.firestore().collection("Recettes")
+    .doc(e)
+    .get()
+    .then((recette)=>{
+      let res=recettesCopie.find(e=>e.id===recette.id)
+      if(!recettes.includes(re=>re.id===res.id)){
+        setRecettes(recettes=>[...recettes,res])
+      }
+      // setRecettes(recettes=>[...recettes,{id:recette.id, recette:recette.data()}])
+    })
+    })
+  }
   ///////////////////////////////////////////////////////////////////////////////
 
   return (
@@ -119,182 +179,193 @@ handTrack.load().then(model => {
           filterCategorie={filterCategorie}
           filterChef={filterChef}
           navigationFunction={navigationFunction}
+          AfficherMesRecette={AfficherMesRecette}
         ></Header>
       </div>
-        <React.Fragment>
-          <TransformWrapper>
-            <TransformComponent>
-              {etatUser === "connecter" ? (
-                <React.Fragment>
-                  {content === "accueil" ? (
-                <div className="Body">
-                  {recettes.map((recette, key) => (
-                    <Card
-                      border="secondary"
-                      style={{
-                        width: "405px",
-                        margin: "1%",
-                        alignItems: "center",
-                        alignContent: "center",
-                        boxShadow: "6px -6px -6px -6px teal",
-                      }}
-                      key={recette.id}
-                    >
-                      <TransformWrapper>
-                        <TransformComponent>
-                          <Card.Img
-                            variant="top"
-                            src={recette.recette.url}
-                            style={{ width: "380px", height: "300px" }}
-                          />
-                        </TransformComponent>
-                      </TransformWrapper>
-                      <Card.Body style={{ textAlign: "center" }}>
-                        <Card.Title>{recette.recette.nom}</Card.Title>
-                        <Card.Text>
-                          {recette.recette.categorie.split("/")[1]}
-                        </Card.Text>
-                        <Card.Link
-                          name={recette.id}
-                          onClick={voirDetailFonction}
-                        >
-                          Voir détails...
+      <React.Fragment>
+        <TransformWrapper>
+          <TransformComponent>
+            {etatUser === "connecter" ? (
+              <React.Fragment>
+                {content === "accueil" ? (
+                  <div className="Body">
+                    {recettes.map((recette, key) => (
+                      <Card
+                        border="secondary"
+                        style={{
+                          width: "405px",
+                          margin: "1%",
+                          alignItems: "center",
+                          alignContent: "center",
+                          boxShadow: "6px -6px -6px -6px teal",
+                        }}
+                        key={recette.id}
+                      >
+                        <TransformWrapper>
+                          <TransformComponent>
+                            <Card.Img
+                              variant="top"
+                              src={recette.recette.url}
+                              style={{ width: "380px", height: "300px" }}
+                            />
+                          </TransformComponent>
+                        </TransformWrapper>
+                        <Card.Body style={{ textAlign: "center" }}>
+                          <Card.Title>{recette.recette.nom}</Card.Title>
+                          <h4>
+                            {recette.recette.categorie.split("/")[1]}
+                          </h4>
+                          <Card.Link
+                            name={recette.id}
+                            onClick={voirDetailFonction}
+                          >
+                            Voir détails...
                         </Card.Link>
+                        <Card.Link
+                            name={recette.id}
+                            onClick={enregistrerFonction}
+                          >
+                            Enregistrer...
+                        </Card.Link>
+                        </Card.Body>
+                        <Card.Footer>
+                          <StarRatingComponent
+                            name="rate1"
+                            starCount={6}
+                            value={recette.recette.poid / 4}
+                          />
+                        </Card.Footer>
+                      </Card>
+                    ))}
+                  </div>
+                ) : content === "about" ? (
+                  <AboutAs></AboutAs>
+                ) : content === "contact" ? (
+                  <React.Fragment>
+                    <Contact FermerContact={FermerContact}></Contact>
+                  </React.Fragment>
+                ) : null}
+                <Modal show={showDetail} className="html">
+                  {recetteDetail ? (
+                    <Card style={{ width: "100%" }}>
+                      <Card.Header>
+                        <Card.Title>{recetteDetail.nom}</Card.Title>
+                      </Card.Header>
+                      <Card.Body>
+                        <Card.Title>
+                          Catégorie : {recetteDetail.categorie.split("/")[1]}
+                        </Card.Title>
+                        <br />
+                        <Card.Title>Chef : {recetteDetail.chef}</Card.Title>
+                        <br />
+                        <Card.Title>
+                          Nombre personne : {recetteDetail.nombrePersonnes}
+                        </Card.Title>
+                        <br />
+                        <Card.Title>
+                          Ingrédients :<br />
+                          <ul>
+                            <br />
+                            {ingredients
+                              .filter((ingredient) =>
+                                recetteDetail.ingredients.includes(ingredient.id)
+                              )
+                              .map((ingredient, index) => (
+                                <li key={index}>{ingredient.ingredient.nom}</li>
+                              ))}
+                          </ul>
+                        </Card.Title>
+                        <br />
+                        <Card.Title>Préparation :</Card.Title>
+                        <br />
+                        <Card.Title>{recetteDetail.description}</Card.Title>
                       </Card.Body>
-                      <Card.Footer>
-                        <StarRatingComponent
-                          name="rate1"
-                          starCount={6}
-                          value={recette.recette.poid / 4}
-                        />
+                        <a data-categorie={recetteDetail.categorie.split("/")[1]} onClick={recommandationCategorie}> <h2>Voir par ici les {recetteDetail.categorie.split("/")[1]}</h2></a>
+                        <a data-chef={recetteDetail.chef} onClick={recommandationChef}><h2> Voir par ici les recettes de {recetteDetail.chef}</h2></a>
+                        <a data-categorie={recetteDetail.categorie.split("/")[1]} data-chef={recetteDetail.chef} onClick={recommandationF}><h2> Voir par ici les recettes de {recetteDetail.chef.split("/")[1]}</h2></a>
+                      <Card.Footer style={{ textAlign: "center" }}>   
+                        <Card.Link onClick={fermerDetail}>Fermer</Card.Link>
                       </Card.Footer>
                     </Card>
-                  ))}
-                </div>
-                    ) : content === "about" ? (
-                      <AboutAs></AboutAs>
-                    ) : content === "contact" ? (
-                      <React.Fragment>
-                        <Contact></Contact>
-                      </React.Fragment>
-                    ) : null}  
-              <Modal show={showDetail} className="html">
-                {recetteDetail ? (
-                  <Card style={{ width: "100%" }}>
-                    <Card.Header>
-                      <Card.Title>{recetteDetail.nom}</Card.Title>
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Title>
-                        Catégorie : {recetteDetail.categorie.split("/")[1]}
-                      </Card.Title>
-                      <br />
-                      <Card.Title>Chef : {recetteDetail.chef}</Card.Title>
-                      <br />
-                      <Card.Title>
-                        Nombre personne : {recetteDetail.nombrePersonnes}
-                      </Card.Title>
-                      <br />
-                      <Card.Title>
-                        Ingrédients :<br />
-                        <ul>
-                          <br />
-                          {ingredients
-                            .filter((ingredient) =>
-                              recetteDetail.ingredients.includes(ingredient.id)
-                            )
-                            .map((ingredient, index) => (
-                              <li key={index}>{ingredient.ingredient.nom}</li>
-                            ))}
-                        </ul>
-                      </Card.Title>
-                      <br />
-                      <Card.Title>Préparation :</Card.Title>
-                      <br />
-                      <Card.Text>{recetteDetail.description}</Card.Text>
-                    </Card.Body>
-                    <Card.Footer style={{ textAlign: "center" }}>
-                      <Card.Link onClick={fermerDetail}>Fermer</Card.Link>
-                    </Card.Footer>
-                  </Card>
-                ) : (
-                  "Chargement en cours"
-                )}
-              </Modal>
-                </React.Fragment>
-              ) : (
-                <div
-                  style={{ height: "500px", color: "white" }}
-                  className="stripe-text"
-                >
-                  <Carousel style={{ marginBottom: "20%", marginTop: "8%" }}>
-                    <Carousel.Item interval={2500}>
-                      <h3
-                        style={{
-                          color: "red",
-                          marginLeft: "5%",
-                          marginBottom: "10%",
-                          fontSize: "62px",
-                          textShadow:
-                            "-1px -1px #0c0, 1px 1px #060, -3px 0 4px #000",
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                          color: "#090",
-                          padding: "46px",
-                          fontWeight: "lighter",
-                          textAlign: "center",
-                          display: "block",
-                        }}
-                      >
-                        Bienvenue chez nous !
-                      </h3>
-                    </Carousel.Item>
-                    <Carousel.Item interval={2500}>
-                      <h3
-                        style={{
-                          color: "red",
-                          marginLeft: "3%",
-                          marginBottom: "10%",
-                          fontSize: "62px",
-                          textShadow:
-                            "-1px -1px #0c0, 1px 1px #060, -3px 0 4px #000",
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                          padding: "46px",
-                          fontWeight: "lighter",
-                          textAlign: "center",
-                          display: "block",
-                        }}
-                      >
-                        Mes recettes
-                      </h3>
-                    </Carousel.Item>
-                    <Carousel.Item interval={2500}>
-                      <h3
-                        style={{
-                          marginLeft: "3%",
-                          marginBottom: "10%",
-                          fontSize: "62px",
-                          textShadow:
-                            "-1px -1px #0c0, 1px 1px #060, -3px 0 4px #000",
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                          color: "#009",
-                          padding: "46px",
-                          fontWeight: "lighter",
-                          textAlign: "center",
-                          display: "block",
-                        }}
-                      >
-                        Soyez heureux
-                      </h3>
-                    </Carousel.Item>
-                  </Carousel>
-                </div>
-               
+                  ) : (
+                      "Chargement en cours"
+                    )}
+                </Modal>
+              </React.Fragment>
+            ) : (
+<Carousel style={{width:'1200px',marginLeft:'14%'}}>
+  <Carousel.Item interval={1800}>
+    <img style={{width:"500px"}}
+      className="d-block w-100"
+      src="/23918_w600.jpg"
+      alt="First slide"
+    />
+    <Carousel.Caption>
+         <h4>Bienvenue !</h4>
+      <h5>Connectez vous.</h5>
+      <h5>Si vous n'avez pas de compte vous pouvez vous inscrire </h5>
+    </Carousel.Caption>
+  </Carousel.Item>
+  <Carousel.Item interval={1800}>
+    <img style={{width:"500px"}}
+      className="d-block w-100"
+      src="/25618_w600.jpg"
+      alt="Third slide"
+    />
+
+    <Carousel.Caption>
+    <h4>Bienvenue !</h4>
+      <h5>Connectez vous.</h5>
+      <h5>Si vous n'avez pas de compte vous pouvez vous inscrire </h5>
+    </Carousel.Caption>
+  </Carousel.Item>
+  <Carousel.Item interval={1800}>
+    <img style={{width:"500px"}}
+      className="d-block w-100"
+      src="/50045_w600.jpg"
+      alt="Third slide"
+    />
+
+    <Carousel.Caption>
+    <h4>Bienvenue !</h4>
+      <h5>Connectez vous.</h5>
+      <h5>Si vous n'avez pas de compte vous pouvez vous inscrire </h5>
+    </Carousel.Caption>
+  </Carousel.Item>
+  <Carousel.Item interval={1800}>
+    <img style={{width:"500px"}}
+      className="d-block w-100"
+      src="/82832_w600.jpg"
+      alt="Third slide"
+    />
+
+    <Carousel.Caption>
+    <h4>Bienvenue !</h4>
+      <h5>Connectez vous.</h5>
+      <h5>Si vous n'avez pas de compte vous pouvez vous inscrire </h5>
+    </Carousel.Caption>
+  </Carousel.Item>
+  <Carousel.Item interval={1800}>
+    <img style={{width:"500px"}}
+      className="d-block w-100"
+      src="/54701_w600.jpg"
+      alt="Third slide"
+    />
+
+    <Carousel.Caption>
+      <h4>Bienvenue !</h4>
+      <h5>Connectez vous.</h5>
+      <h5>Si vous n'avez pas de compte vous pouvez vous inscrire </h5>
+    </Carousel.Caption>
+  </Carousel.Item>
+</Carousel>
+
               )}
 
-              
-            </TransformComponent>
-          </TransformWrapper>
-        </React.Fragment>
+
+          </TransformComponent>
+        </TransformWrapper>
+      </React.Fragment>
 
       <br />
       <br />

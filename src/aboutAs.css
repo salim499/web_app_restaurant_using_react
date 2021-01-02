@@ -14,23 +14,26 @@ body {
   .column {
     flex:content;
     float: center;
-    width: 33.33%;
     margin-bottom: 16px;
     padding: 0 8px;
     justify-content:center;
-    margin-left: 10%;
+    width: 60%;
+    height: 600px;
+    margin-left: 18%;
   }
-  
+  img {
+    height: 600px;
+  }
   .card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 1);
     margin: 8px;
   }
   
   .about-section {
     padding: 50px;
     text-align: center;
-    background-color: #474e5d;
-    color: white;
+    background-color: #ec710c;
+    color: black;
     margin: 2%;
   }
   
@@ -53,8 +56,8 @@ body {
     outline: 0;
     display: inline-block;
     padding: 8px;
-    color: white;
-    background-color: #000;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
     text-align: center;
     cursor: pointer;
     width: 100%;
@@ -63,10 +66,55 @@ body {
   .button:hover {
     background-color: #555;
   }
-  
+  .apropos {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    cursor: pointer;
+    width: 100%;   
+  }
   @media screen and (max-width: 650px) {
     .column {
       width: 100%;
       display: block;
     }
+  }
+
+  h2 {
+    font-size: 32px;
+    line-height: 150px;
+    text-shadow: -1px -1px #fb6, 1px 1px #d60, -3px 0 4px #000;
+    font-family:"Segoe print", Arial, Helvetica, sans-serif;
+    color: #08f127; 
+    padding:32px;
+    font-weight:lighter;
+    -moz-box-shadow: 2px 2px 6px #888;  
+    -webkit-box-shadow: 2px 2px 6px #888;  
+    box-shadow:2px 2px 6px #888;  
+    text-align:center;
+    display:inline;
+  }
+  h3 {
+    font-size: 32px;
+    line-height: 150px;
+    text-shadow: -1px -1px #fb6, 1px 1px #d60, -3px 0 4px #000;
+    font-family:"Segoe print", Arial, Helvetica, sans-serif;
+    color: #FF9933; 
+    padding:32px;
+    font-weight:lighter;
+    -moz-box-shadow: 2px 2px 6px #888;  
+    -webkit-box-shadow: 2px 2px 6px #888;  
+    box-shadow:2px 2px 6px #888;  
+    text-align:center;
+    display:inline;    
+  }
+  p {
+    font-size: 32px;
+    line-height: 150px;
+    color: navy;
+    background-color: rgba(255, 255, 255,0.2); 
   }

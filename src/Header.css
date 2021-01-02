@@ -188,7 +188,7 @@ nav .logo.space{
 nav{
 
   background: #1b1b1b;
-  z-index: 10000000;
+
 }
 nav:after{
   content: '';
@@ -209,14 +209,14 @@ nav ul{
   margin-right: 40px;
   list-style: none;
   position: relative;
-  z-index: 10000000;
+
 }
 nav ul li{
   float: left;
   display: inline-block;
   background: #1b1b1b;
   margin: 0 5px;
-  z-index: 10000000;
+
 }
 nav ul li a{
   color: white;
@@ -224,14 +224,14 @@ nav ul li a{
   text-decoration: none;
   font-size: 18px;
   padding: 8px 15px;
-  z-index: 10000000;
+
 }
 nav ul li a:hover{
   color: cyan;
   border-radius: 5px;
   box-shadow:  0 0 5px #33ffff,
                0 0 10px #66ffff;
- z-index: 10000000;
+
 }
 nav ul ul li a:hover{
   box-shadow: none;
@@ -243,7 +243,7 @@ nav ul ul{
   opacity: 0;
   visibility: hidden;
   transition: top .3s;
-  z-index: 10000000;
+
 }
 nav ul ul ul{
   border-top: none;
@@ -252,7 +252,7 @@ nav ul li:hover > ul{
   top: 70px;
   opacity: 1;
   visibility: visible;
-  z-index: 10000000;
+
 }
 nav ul ul li{
   position: relative;
@@ -271,7 +271,7 @@ nav ul ul ul li{
   position: relative;
   top: -60px;
   left: 150px;
-  z-index: 10000000;
+
 }
 .show,.icon,.input{
   display: none;

@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background: url("./images/backGround.jpg");
+ background-size: cover;
 }
 
 .App-logo {
@@ -46,4 +48,9 @@
 .tools{
   margin-left: 45%;
   margin-top: 0px;
+}
+.centered{
+   margin: 25%;
+   margin-top: 2%;
+   height: 240px;
 }

@@ -60,7 +60,7 @@ function App() {
   </div>
   <input type="checkbox" name="show-password" class="show-password a11y-hidden" id="show-password" tabindex="3" />
   <label class="label-show-password" for="show-password">
-    <span>Voir mot de passe</span>
+    <span>Afficher mot de passe</span>
   </label>
   <div>
     <label class="label-password">

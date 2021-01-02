@@ -83,6 +83,21 @@ function App(props) {
   function navigationFunctionVoice(e){
     props.navigationFunction(e)   
   }
+  function AfficherMesRecette(){
+    console.log("saha")
+    firebase.firestore().collection("MesRecettes")
+    .get()
+    .then(d=>{
+      let user=firebase.auth().currentUser.uid
+      let recettes=[]
+      d.forEach(e=>{
+        if(e.data().id===user){
+           recettes.push(e.data().recette)
+        }
+      })
+      props.AfficherMesRecette(recettes)
+    })
+  }
   ///////////////////////////////////////////////////////////////////////////////////
 
   const inscrire = "inscrire";
@@ -198,6 +213,9 @@ function App(props) {
       else if(e.results[0][0]["transcript"].includes("accueil")){
         navigationFunctionVoice("accueil")
       }
+      else if(e.results[0][0]["transcript"].includes("m")){
+          AfficherMesRecette()
+      }
       else{
         recognition.stop()
         recognition.onend=function(){recognition.start()}
@@ -254,76 +272,9 @@ function App(props) {
   })
 },[])
   return (
-   /* <div class="bodyHome">
-      <nav className="navheader">
-        <div class="menu-icon">
-          <span class="fas fa-bars"></span>
-        </div>
-        <div class="logo">Acceuil</div>
-        <div class="nav-items">
-          {connexionDeconnexion ? (
-            <React.Fragment>
-              <li onClick={ouvrirModalInscription}>
-                <a href="#">S'inscrire</a>
-              </li>
-              <li onClick={ouvrirModalConnection}>
-                <a href="#">Se connecter</a>
-              </li>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <li onClick={ouvrirModalCompte}>
-                <a href="#">Mon compte</a>
-              </li>
-              <li onClick={deconnexionBDD}>
-                <a href="#">Se deconnecter</a>
-              </li>
-            </React.Fragment>
-          )}
-
-          <li>
-            <a href="#">
-              <i
-                style={{ color: colorConnexion, fontSize: "36px" }}
-                class="fas fa-user"
-              ></i>
-            </a>
-          </li>
-        </div>
-        <div class="search-icon">
-          <span></span>
-        </div>
-        <div class="cancel-icon">
-          <span class="fas fa-times"></span>
-        </div>
-
-      </nav>
-      <Modal show={showConnection} className="html">
-        <ModalConnection></ModalConnection>
-        <button
-          style={{ color: "black", backgroundColor: "white" }}
-          onClick={fermerModalConnection}
-        >
-          FermerConnexion
-        </button>
-      </Modal>
-      <Modal show={showInscription} className="html">
-        <ModalInscription></ModalInscription>
-        <button onClick={fermerModalInscription}>Fermer inscription</button>
-      </Modal>
-      <Modal show={showCompte} className="html">
-        <ModalCompte></ModalCompte>
-        <button
-          style={{ color: "black", backgroundColor: "white" }}
-          onClick={fermerModalCompte}
-        >
-          Fermer
-        </button>
-      </Modal>
-    </div>*/
     <div className="body2">
       <nav>
-        <div class="logo">Mes Recettes</div>
+        <div class="logo"><a name="accueil" onClick={navigationFunction}>Mes Recettes</a></div>
         <label for="btn" class="icon">
           <span class="fa fa-bars"></span>
         </label>
@@ -342,6 +293,9 @@ function App(props) {
             <React.Fragment>
               <li onClick={navigationFunction}>
                 <a href="#" name="plan">Plan du site</a>
+              </li>
+              <li onClick={navigationFunction}>
+                <a href="#" name="plan" onClick={AfficherMesRecette}>Mes recettes</a>
               </li>
               <li onClick={navigationFunction}>
                 <a href="#" name="about">À propos de nous</a>
@@ -398,7 +352,7 @@ function App(props) {
           style={{ color: "black", backgroundColor: "white" }}
           onClick={fermerModalConnection}
         >
-          FermerConnexion
+          Fermer connexion
         </button>
       </Modal>
       <Modal show={showInscription} className="html">

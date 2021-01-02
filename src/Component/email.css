@@ -1,0 +1,13 @@
+.containerEmail {
+    margin:2%;
+    margin-left: 350px;
+    background-color:white;
+}
+
+
+@media all and (max-width: 750px) {
+    .containerEmail {
+        margin:0%;
+        margin-left: 0px;
+    }
+}

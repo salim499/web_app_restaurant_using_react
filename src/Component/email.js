@@ -3,9 +3,9 @@ import {useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Table, Modal, Card} from 'react-bootstrap'
 import firebase from '../FireStore'
-import './Utilisateurs.css'
+import './email.css'
 import Contact from '../contact'
-function App() {
+function App(props) {
 
   function voirMessage(e){
     setShowEmail(true)
@@ -21,6 +21,9 @@ function App() {
   }
   function fermerResponseForm(e){
     setShowResponseForm(false)
+  }
+  function FermerContact(e){
+    props.FermerContact()
   }
 
   const [emails, setEmails]=useState([])
@@ -48,8 +51,12 @@ function App() {
         })
 },[])
   return (
-    <div>
-<div className="Table" style={{height: "500px", overflow: "scroll"}}>
+  <div className="containerEmail">
+<div className="Table">
+<div style={{marginLeft:"30%"}}>
+<button style={{color:"white", cursor:"pointer",size:"20px", background:"green"}} onClick={ouvrirResponseForm}>Envoyer un message</button>
+</div>
+<br/>
 <Table striped bordered hover variant="dark" responsive="xl">
   <thead>
     <tr>
@@ -72,10 +79,11 @@ function App() {
       ))}
   </tbody>
 </Table> 
+<button onClick={FermerContact}>Fermer</button>
 <Modal show={showEmail} style={{marginTop:"5%",marginBottom:"5%", color:"#000"}}>
    {
      emailChoisi?
-     <Card  style={{ width: '100%',marginLeft:"1%" }}>
+     <Card  style={{ width: '100%'}}>
      <Card.Header>email : {emailChoisi.email}</Card.Header>
      <br/>
      <Card.Body style={{alignItems:"center" }}>
@@ -102,10 +110,6 @@ function App() {
 <button onClick={fermerResponseForm}>fermer</button>
 </Modal>
 </div>
-<div style={{marginLeft:"43%"}}>
-<button style={{color:"white", cursor:"pointer",size:"20px", background:"green"}} onClick={ouvrirResponseForm}>Envoyer un message</button>
-</div>
-
 </div>
   );
 }
