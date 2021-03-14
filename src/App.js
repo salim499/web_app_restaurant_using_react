@@ -22,7 +22,7 @@ function App() {
   },[])
   return (
     <React.Fragment>
-      {/*
+      {
         admin==="admin"?
         <Admin></Admin>
         :
@@ -34,8 +34,7 @@ function App() {
           <Footer></Footer>
       </div>
       
-      */}
-               <h1 style={{color:"black"}}> Je t aime a thafounasth </h1>
+      }
     </React.Fragment>
   );
 }
