@@ -22,7 +22,7 @@ function App() {
   },[])
   return (
     <React.Fragment>
-      {
+      {/*
         admin==="admin"?
         <Admin></Admin>
         :
@@ -32,7 +32,8 @@ function App() {
           </div>
           <Footer></Footer>
       </div>
-      }
+      */}
+    <h1> Je t'aime a thafounasth </h1>
     </React.Fragment>
   );
 }
